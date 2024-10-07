@@ -1,4 +1,4 @@
-package com.pro.sky.java.course2.service;
+package com.pro.sky.java.course2;
 
 import java.util.Objects;
 
@@ -19,12 +19,21 @@ public class Question {
         return answer;
     }
 
+    public String setQuestion() {
+        return question;
+    }
+
+    public String setAnswer() {
+        return answer;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Question question1 = (Question) o;
-        return Objects.equals(question, question1.question) && Objects.equals(answer, question1.answer);
+        return Objects.equals(question, question1.question)
+                && Objects.equals(answer, question1.answer);
     }
 
     @Override

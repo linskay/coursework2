@@ -1,6 +1,6 @@
 package com.pro.sky.java.course2.controller;
 
-import com.pro.sky.java.course2.service.Question;
+import com.pro.sky.java.course2.Question;
 import com.pro.sky.java.course2.service.ExaminerService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+
 @RestController
 @RequestMapping("/api/exam")
 public class ExamController {
@@ -19,8 +20,9 @@ public class ExamController {
     }
 
     @GetMapping("/questions")
-    public ResponseEntity<Object> getQuestions(@RequestParam(value = "amount", defaultValue = "5") int amount) {
-        List<Question> questions = examinerService.getQuestions(amount);
+    public ResponseEntity<Object> getQuestions(@RequestParam(value = "amount", defaultValue = "5")
+                                               int amount, String question, String answer) {
+        List<Question> questions = examinerService.getQuestions(amount, question, answer);
         return ResponseEntity.ok(questions);
     }
 }

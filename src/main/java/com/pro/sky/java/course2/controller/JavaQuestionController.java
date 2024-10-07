@@ -1,7 +1,7 @@
 package com.pro.sky.java.course2.controller;
 
 import com.pro.sky.java.course2.service.JavaQuestionService;
-import com.pro.sky.java.course2.service.Question;
+import com.pro.sky.java.course2.Question;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,7 +16,8 @@ public class JavaQuestionController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<Question> addQuestion(@RequestBody Question question) {
+    public ResponseEntity<Question> addQuestion(@RequestBody Question question,
+                                                @RequestBody Question answer) {
         javaQuestionService.addQuestion(question);
         return ResponseEntity.status(HttpStatus.CREATED).body(question);
     }
@@ -28,11 +29,11 @@ public class JavaQuestionController {
     }
 
     @GetMapping("/random")
-    public ResponseEntity<Question> getRandomQuestion() {
+    public ResponseEntity<String> getRandomQuestion() {
         Question randomQuestion = javaQuestionService.getRandomQuestion();
         if (randomQuestion == null) {
             return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.ok(randomQuestion);
+        return ResponseEntity.ok(randomQuestion.getQuestion());
     }
 }

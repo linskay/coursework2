@@ -1,10 +1,10 @@
 package com.pro.sky.java.course2.service;
 
+import com.pro.sky.java.course2.Question;
 import com.pro.sky.java.course2.exeption.TooManyQuestionsException;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
@@ -30,30 +30,15 @@ public class JavaQuestionService implements QuestionService {
             Random random = new Random();
             while (result.size() < limit) {
                 int index = random.nextInt(questions.size());
-                result.addAll(questions.stream().skip(index).limit(1).toList());
+                questions.stream().skip(index).findFirst().ifPresent(result::add);
             }
             return result;
         }
     }
 
     @Override
-    public List<Question> getAllQuestions() {
-        return List.of();
-    }
-
-    @Override
-    public Question getQuestionById(int id) {
-        return null;
-    }
-
-    @Override
     public void addQuestion(Question question) {
         questions.add(question);
-    }
-
-    @Override
-    public void deleteQuestion(int id) {
-
     }
 
     @Override
