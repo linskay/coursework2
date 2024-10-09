@@ -4,6 +4,7 @@ import com.pro.sky.java.course2.Question;
 import com.pro.sky.java.course2.exeption.TooManyQuestionsException;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
@@ -47,14 +48,16 @@ public class JavaQuestionService implements QuestionService {
     }
 
     @Override
-    public Question getRandomQuestion() {
-        if (questions.isEmpty()) {
-            return null;
+    public Collection<Question> getRandomQuestion(int count) {
+        if (count <= 0 || count > questions.size()) {
+            return new HashSet<>();
         }
-        int randomIndex = new Random().nextInt(questions.size());
-        return new HashSet<>(questions).stream()
-                .skip(randomIndex)
-                .findFirst()
-                .orElse(null);
+        Set<Question> randomQuestions = new HashSet<>();
+        Random random = new Random();
+        while (randomQuestions.size() < count) {
+            int randomIndex = random.nextInt(questions.size());
+            randomQuestions.add(questions.stream().skip(randomIndex).findFirst().orElseThrow());
+        }
+        return randomQuestions;
     }
 }

@@ -21,8 +21,8 @@ public class ExamController {
 
     @GetMapping("/questions")
     public ResponseEntity<Object> getQuestions(@RequestParam(value = "amount", defaultValue = "5")
-                                               int amount, String question, String answer) {
-        List<Question> questions = examinerService.getQuestions(amount, question, answer);
+                                               int amount) {
+        List<Question> questions = examinerService.getQuestions(amount);
         return ResponseEntity.ok(questions);
     }
 }

@@ -55,20 +55,20 @@ class ExaminerServiceImplTest {
         expectedQuestions.add(question5);
         when(javaQuestionService.getQuestions(5)).thenReturn(expectedQuestions);
 
-        List<Question> questions = examinerService.getQuestions(5, "Вопрос", "Ответ");
+        List<Question> questions = examinerService.getQuestions(5);
         assertEquals(5, questions.size());
     }
 
     @Test
     @DisplayName("Получение вопросов для экзамена при превышении лимита")
     void getQuestionsToAskExceedingLimit() {
-        Assertions.assertThrows(TooManyQuestionsException.class, () -> examinerService.getQuestions(10, "", ""));
+        Assertions.assertThrows(TooManyQuestionsException.class, () -> examinerService.getQuestions(10));
     }
 
     @Test
     @DisplayName("Получение вопросов для экзамена при недостаточном количестве вопросов")
     void getQuestionsToAskInsufficientQuestions() {
         when(javaQuestionService.getQuestions(5)).thenReturn(new HashSet<>());
-        Assertions.assertThrows(TooManyQuestionsException.class, () -> examinerService.getQuestions(5, "", ""));
+        Assertions.assertThrows(TooManyQuestionsException.class, () -> examinerService.getQuestions(5));
     }
 }

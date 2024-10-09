@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface ExaminerService {
 
-    List<Question> getQuestions(int amount, String question, String answer) throws TooManyQuestionsException;
+    List<Question> getQuestions(int amount) throws TooManyQuestionsException;
 }

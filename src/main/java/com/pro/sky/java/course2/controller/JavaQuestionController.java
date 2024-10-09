@@ -6,6 +6,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collection;
+import java.util.Collections;
+
 @RestController
 @RequestMapping("/exam/java")
 public class JavaQuestionController {
@@ -29,11 +32,11 @@ public class JavaQuestionController {
     }
 
     @GetMapping("/random")
-    public ResponseEntity<String> getRandomQuestion() {
-        Question randomQuestion = javaQuestionService.getRandomQuestion();
-        if (randomQuestion == null) {
+    public ResponseEntity<Collection<Question>> getRandomQuestion() {
+        Collection<Question> randomQuestions = javaQuestionService.getRandomQuestion(1);
+        if (randomQuestions.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.ok(randomQuestion.getQuestion());
+        return ResponseEntity.ok(randomQuestions);
     }
 }
