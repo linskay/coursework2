@@ -1,34 +1,36 @@
 package com.pro.sky.java.course2.service;
 
 import com.pro.sky.java.course2.Question;
+import com.pro.sky.java.course2.exeption.IncorrectParameterException;
 import com.pro.sky.java.course2.exeption.TooManyQuestionsException;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 
 @Service
 public class ExaminerServiceImpl implements ExaminerService {
 
-    private final JavaQuestionService javaQuestionService;
+    private final QuestionService questionService;
 
-    public ExaminerServiceImpl(JavaQuestionService javaQuestionService) {
-        this.javaQuestionService = javaQuestionService;
+    public ExaminerServiceImpl(QuestionService questionService) {
+        this.questionService = questionService;
     }
 
     @Override
-    public List<Question> getQuestions(int amount) throws TooManyQuestionsException {
-        if (amount > 5) {
-            throw new TooManyQuestionsException("Указано много вопросов. Максимальное количество - 5");
+    public Collection<Question> getQuestions(int amount) {
+        if (questionService.getAll().size() < amount ||
+                amount <= 0) {
+            throw new IncorrectParameterException();
         }
-
-        Set<Question> questions = javaQuestionService.getQuestions(amount);
-
-        if (questions.size() < amount) {
-            throw new TooManyQuestionsException("Недостаточно вопросов в базе. Запрошено: " + amount + ", доступно: " + questions.size());
+        Set<Question> resultQuestionSet = new HashSet<>();
+        if (amount == questionService.getAll().size()) {
+            return questionService.getAll();
         }
-
-        return new ArrayList<>(questions);
+        while (amount > resultQuestionSet.size()) {
+            resultQuestionSet.add(questionService.getRandom());
+        }
+        return resultQuestionSet;
     }
 }

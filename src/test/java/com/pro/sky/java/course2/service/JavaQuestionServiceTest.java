@@ -1,13 +1,15 @@
 package com.pro.sky.java.course2.service;
 
 import com.pro.sky.java.course2.Question;
-import com.pro.sky.java.course2.exeption.TooManyQuestionsException;
+import com.pro.sky.java.course2.exeption.IncorrectParameterException;
+import com.pro.sky.java.course2.exeption.QuestionNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Set;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -25,44 +27,47 @@ class JavaQuestionServiceTest {
         question1 = new Question("Что такое Java?", "Java - это язык программирования");
         question2 = new Question("Что такое Spring?", "Spring - это фреймворк для Java");
         question3 = new Question("Что такое Maven?", "Maven - это инструмент сборки");
-        javaQuestionService.addQuestion(question1);
-        javaQuestionService.addQuestion(question2);
-        javaQuestionService.addQuestion(question3);
+        javaQuestionService.add(question1);
+        javaQuestionService.add(question2);
+        javaQuestionService.add(question3);
     }
 
     @Test
-    @DisplayName("Получение вопросов в пределах лимита")
-    void getQuestionsWithinLimit() throws TooManyQuestionsException {
-        Set<Question> questions = javaQuestionService.getQuestions(2);
-        assertEquals(2, questions.size());
-        assertTrue(questions.contains(question1));
-        assertTrue(questions.contains(question2));
+    @DisplayName("Корректный тест на добавление")
+    void test1() {
+        Question actual = javaQuestionService.add(new Question("Ыыыы1", "Сам ыыы1"));
+        assertNotNull(actual);
+        assertEquals(4, javaQuestionService.getAll().size());
     }
 
     @Test
-    @DisplayName("Получение вопросов, превышающих лимит")
-    void getQuestionsExceedingLimit() {
-        javaQuestionService.addQuestion(new Question("Вопрос 4", "Ответ 4"));
-        javaQuestionService.addQuestion(new Question("Вопрос 5", "Ответ 5"));
-        javaQuestionService.addQuestion(new Question("Вопрос 6", "Ответ 6"));
-        javaQuestionService.addQuestion(new Question("Вопрос 7", "Ответ 7"));
-        assertThrows(TooManyQuestionsException.class, () -> javaQuestionService.getQuestions(6));
+    @DisplayName("Корректный тест на удаление")
+    void test2() {
+        assertNull(javaQuestionService.remove(question1));
+        assertEquals(2, javaQuestionService.getAll().size());
     }
 
     @Test
-    @DisplayName("Добавление и удаление вопроса")
-    void addAndRemoveQuestion() {
-        assertEquals(3, javaQuestionService.getQuestions(3).size());
-        javaQuestionService.addQuestion(question1);
-        assertEquals(3, javaQuestionService.getQuestions(3).size());
-        javaQuestionService.removeQuestion(question1);
-        assertEquals(2, javaQuestionService.getQuestions(3).size());
+    @DisplayName("Тест на выброс исключения на некорректный параметр")
+    void test3() {
+        assertThrows(IncorrectParameterException.class, () -> javaQuestionService.add(null));
     }
 
     @Test
-    @DisplayName("Получение случайного вопроса")
-    void getRandomQuestion() {
-        Collection<Question> randomQuestions = javaQuestionService.getRandomQuestion(1);
-        assertFalse(randomQuestions.isEmpty());
+    @DisplayName("Тест на выброс исключения на удаление вопроса которого нет")
+    void test4() {
+        assertThrows(QuestionNotFoundException.class, () -> javaQuestionService.remove(new Question("gjgf", "vehfdmz")));
+    }
+
+    @Test
+    @DisplayName("Положительный тест на возвращение коллекции")
+    void test5() {
+        Question q = new Question("ыыы111", "шото223344");
+        javaQuestionService.add(q);
+        assertEquals(4, javaQuestionService.getAll().size());
+        Collection<Question> collectionExpected = new ArrayList<>(
+                List.of(question1, question2, question3, q)
+        );
+        assertEquals(collectionExpected.size(), javaQuestionService.getAll().size());
     }
 }

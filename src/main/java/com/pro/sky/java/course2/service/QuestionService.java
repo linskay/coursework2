@@ -1,19 +1,20 @@
 package com.pro.sky.java.course2.service;
 
 import com.pro.sky.java.course2.Question;
-import com.pro.sky.java.course2.exeption.TooManyQuestionsException;
 
 import java.util.Collection;
-import java.util.Set;
 
 public interface QuestionService {
 
+    Question add(Question question);
 
-    Set<Question> getQuestions(int limit) throws TooManyQuestionsException;
+    Question add(String question, String answer);
 
-    void addQuestion(Question question);
+    Question remove(Question question);
 
-    void removeQuestion(Question question);
+    Question remove(String question, String answer);
 
-    Collection<Question> getRandomQuestion(int count);
+    Question getRandom();
+
+    Collection<Question> getAll();
 }

@@ -1,42 +1,37 @@
 package com.pro.sky.java.course2.controller;
 
-import com.pro.sky.java.course2.service.JavaQuestionService;
 import com.pro.sky.java.course2.Question;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import com.pro.sky.java.course2.service.QuestionService;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collection;
-import java.util.Collections;
 
 @RestController
 @RequestMapping("/exam/java")
 public class JavaQuestionController {
-    private final JavaQuestionService javaQuestionService;
+    private final QuestionService questionService;
 
-    public JavaQuestionController(JavaQuestionService javaQuestionService) {
-        this.javaQuestionService = javaQuestionService;
+    public JavaQuestionController(QuestionService questionService) {
+        this.questionService = questionService;
     }
 
-    @PostMapping("/add")
-    public ResponseEntity<Question> addQuestion(@RequestBody Question question,
-                                                @RequestBody Question answer) {
-        javaQuestionService.addQuestion(question);
-        return ResponseEntity.status(HttpStatus.CREATED).body(question);
+    @GetMapping("/add")
+    public Question add(@RequestParam(value = "question") String question,
+                        @RequestParam(value = "answer") String answer) {
+        return questionService.add(question, answer);
     }
 
-    @DeleteMapping("/remove")
-    public ResponseEntity<Void> deleteQuestion(@RequestBody Question question) {
-        javaQuestionService.removeQuestion(question);
-        return ResponseEntity.noContent().build();
+    @GetMapping("/remove")
+    public Question remove(@RequestParam(value = "question") String question,
+                           @RequestParam(value = "answer") String answer) {
+        return questionService.remove(question, answer);
     }
 
-    @GetMapping("/random")
-    public ResponseEntity<Collection<Question>> getRandomQuestion() {
-        Collection<Question> randomQuestions = javaQuestionService.getRandomQuestion(1);
-        if (randomQuestions.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.ok(randomQuestions);
+    @GetMapping
+    public Collection<Question> getAll() {
+        return questionService.getAll();
     }
 }

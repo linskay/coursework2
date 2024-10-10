@@ -1,13 +1,12 @@
 package com.pro.sky.java.course2.service;
 
 import com.pro.sky.java.course2.Question;
-import com.pro.sky.java.course2.exeption.TooManyQuestionsException;
+import com.pro.sky.java.course2.exeption.IncorrectParameterException;
+import com.pro.sky.java.course2.exeption.QuestionNotFoundException;
+import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class JavaQuestionService implements QuestionService {
@@ -18,46 +17,63 @@ public class JavaQuestionService implements QuestionService {
         this.questions = new HashSet<>();
     }
 
-    @Override
-    public Set<Question> getQuestions(int limit) throws TooManyQuestionsException {
-        if (limit > 5) {
-            throw new TooManyQuestionsException("Указано много вопросов. Максимальное количество - 5");
-        }
-
-        if (questions.size() <= limit) {
-            return new HashSet<>(questions);
-        } else {
-            Set<Question> result = new HashSet<>();
-            Random random = new Random();
-            while (result.size() < limit) {
-                int index = random.nextInt(questions.size());
-                questions.stream().skip(index).findFirst().ifPresent(result::add);
-            }
-            return result;
-        }
+    @PostConstruct
+    void setUp() {
+        questions.add(new Question("вопрос1", "ответ1"));
+        questions.add(new Question("вопрос2", "ответ2"));
+        questions.add(new Question("вопрос3", "ответ3"));
+        questions.add(new Question("вопрос4", "ответ4"));
+        questions.add(new Question("вопрос5", "ответ5"));
     }
 
     @Override
-    public void addQuestion(Question question) {
+    public Question add(Question question) {
+        if (question == null) {
+            throw new IncorrectParameterException();
+        }
         questions.add(question);
+        return question;
     }
 
     @Override
-    public void removeQuestion(Question question) {
+    public Question add(String question, String answer) {
+        Question q = new Question(question, answer);
+        questions.add(q);
+        return q;
+    }
+
+    @Override
+    public Question remove(Question question) {
+        if (question == null) {
+            throw new IncorrectParameterException();
+        }
+        if (!questions.contains(question)) {
+            throw new QuestionNotFoundException();
+        }
         questions.remove(question);
+        return null;
     }
 
     @Override
-    public Collection<Question> getRandomQuestion(int count) {
-        if (count <= 0 || count > questions.size()) {
-            return new HashSet<>();
+    public Question remove(String question, String answer) {
+        Question rem = new Question(question, answer);
+        if (!questions.contains(rem)) {
+            throw new QuestionNotFoundException();
         }
-        Set<Question> randomQuestions = new HashSet<>();
+        questions.remove(rem);
+        return null;
+    }
+
+    @Override
+    public Question getRandom() {
         Random random = new Random();
-        while (randomQuestions.size() < count) {
-            int randomIndex = random.nextInt(questions.size());
-            randomQuestions.add(questions.stream().skip(randomIndex).findFirst().orElseThrow());
-        }
-        return randomQuestions;
+        Question[] questionsArray = questions.toArray(new Question[0]);
+        int randomIndex = random.nextInt(questionsArray.length);
+        return questionsArray[randomIndex];
+    }
+
+    @Override
+    public Collection<Question> getAll() {
+        return new ArrayList<>(questions);
     }
 }

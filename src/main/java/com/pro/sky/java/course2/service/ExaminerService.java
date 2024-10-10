@@ -1,11 +1,10 @@
 package com.pro.sky.java.course2.service;
 
 import com.pro.sky.java.course2.Question;
-import com.pro.sky.java.course2.exeption.TooManyQuestionsException;
 
-import java.util.List;
+import java.util.Collection;
 
 public interface ExaminerService {
 
-    List<Question> getQuestions(int amount) throws TooManyQuestionsException;
+    Collection<Question> getQuestions(int amount);
 }

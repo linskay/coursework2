@@ -2,27 +2,24 @@ package com.pro.sky.java.course2.controller;
 
 import com.pro.sky.java.course2.Question;
 import com.pro.sky.java.course2.service.ExaminerService;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
+import java.util.Collection;
 
 @RestController
-@RequestMapping("/api/exam")
+@RequestMapping("/exam")
 public class ExamController {
     private final ExaminerService examinerService;
 
-    public ExamController(ExaminerService examinerService) {
-        this.examinerService = examinerService;
+    public ExamController(ExaminerService q) {
+        this.examinerService = q;
     }
 
-    @GetMapping("/questions")
-    public ResponseEntity<Object> getQuestions(@RequestParam(value = "amount", defaultValue = "5")
-                                               int amount) {
-        List<Question> questions = examinerService.getQuestions(amount);
-        return ResponseEntity.ok(questions);
+    @GetMapping("/get/{amount}")
+    public Collection<Question> getAmountQuestions(@PathVariable("amount") int amount) {
+        return examinerService.getQuestions(amount);
     }
 }

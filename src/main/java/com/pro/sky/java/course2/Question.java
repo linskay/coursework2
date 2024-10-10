@@ -19,14 +19,6 @@ public class Question {
         return answer;
     }
 
-    public String setQuestion() {
-        return question;
-    }
-
-    public String setAnswer() {
-        return answer;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
